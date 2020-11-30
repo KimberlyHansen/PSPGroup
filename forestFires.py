@@ -1,6 +1,7 @@
 #Program Purpose
 #This program will allow the user to evaluate forest re activity in the region chosen. You Will upload a CSV le, the program will output cluster information to about hotspots and re behavior by classifying the dierent cluster type i.e clumped, dispersed, random. 
 import csv
+import arcpy
 
 print("Data Input from Modis Forest Fire Occurences")
 print()
@@ -17,3 +18,4 @@ def main():
 
     header = next(datafile)
     writer.writerow(header+["", ""])
+
