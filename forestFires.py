@@ -9,8 +9,8 @@ print()
 input("")
 
 def main():
-    Flie = open (r"blah.csv", "r")
-    datafile = csv.reader(Flie)
+    File = open (r"blah.csv", "r")
+    datafile = csv.reader(File)
 
     newfile = open (r"exported_data.csv", "w")
     writer = csv.writer(newfile)
