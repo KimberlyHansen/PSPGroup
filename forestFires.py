@@ -1,5 +1,5 @@
 #Program Purpose
-#This program will allow the user to evaluate forest re activity in the region chosen. You Will upload a CSV le, the program will output cluster information to about hotspots and re behavior by classifying the dierent cluster type i.e clumped, dispersed, random. 
+#This program will allow the user to evaluate forest are activity in the region chosen. You Will upload a CSV le, the program will output cluster information to about hotspots and are behavior by classifying the different cluster type i.e clumped, dispersed, random. 
 import csv
 import arcpy
 
@@ -33,8 +33,10 @@ print()
 print("Please enter year you would like analyzed:   ")
 input()
 print()
-end = input("Do you want to stop entering values (Y/N)? ")
+end = input("Do you want to stop entering values (Y/N)?:  ")
         print()
         if  end.upper() == 'Y' :
             break
 #*************************************************************
+
+
