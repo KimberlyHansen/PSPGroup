@@ -17,3 +17,23 @@ def main():
 
     header = next(datafile)
     writer.writerow(header+["", ""])
+
+#*************************************************************
+
+print("Please state a minimum number of features to include in your clusters:  ")
+input()
+print()
+print("Please enter search distance for a clumped cluster:  ")
+input()
+print()
+print("Please enter distance for a dispersed cluster:  ")
+input()
+print()
+print("Please enter year you would like analyzed:   ")
+input()
+print()
+end = input("Do you want to stop entering values (Y/N)? ")
+        print()
+        if  end.upper() == 'Y' :
+            break
+#*************************************************************
