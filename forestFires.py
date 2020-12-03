@@ -1,13 +1,13 @@
 # Program Purpose
 # This program will allow the user to evaluate forest are activity in the region chosen. 
-# You Will upload a CSV le, the program will output cluster information to about hotspots
+# You Will upload a CSV file, the program will output cluster information to about hotspots
 # and are behavior by classifying the different cluster type i.e clumped, dispersed, random. 
 import csv
 import arcpy
 
 print("Data Input from Modis Forest Fire Occurences")
 print()
-print("Please input your boundary Shapefile for area of analysis")
+print("Please input your boundary csv file for area analysis")
 print()
 input("")
 
