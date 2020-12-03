@@ -1,5 +1,5 @@
 # Program Purpose
-# This program will allow the user to evaluate forest are activity in the region chosen. 
+# This program will allow the user to evaluate forest fire activity in the region chosen. 
 # You Will upload a CSV file, the program will output cluster information to about hotspots
 # and are behavior by classifying the different cluster type i.e clumped, dispersed, random. 
 import csv
@@ -53,7 +53,7 @@ points = r"C:\GEOM67\GroupProject\firePoints.shp"
 
 arcpy.stats.DensityBasedClustering(points, r"C:\GEOM67\GroupProject\pointClusters.shp", 
 "HDBSCAN", 15) 
-# addiotnal parameters for DBSCAN and OPTICS: ({search_distance}, cluster_sensitivity)
+# additonal parameters for DBSCAN and OPTICS: ({search_distance}, cluster_sensitivity)
 
 #Left to do 
 
@@ -81,7 +81,7 @@ print()
 
 #DISPLAY type, number of point clumps within each area (table and/or map), number of points in each cluster, number of random points
 
-print("Total amount of clusterd points clumped", clumpedData " and total dispersed", dispersedData )
+print("Total amount of clustered points clumped", clumpedData " and total dispersed", dispersedData )
 print("Number of areas and points analyed over", inputyear "years in", inputRegion "region")
 print()
 print("************************************************************************")
