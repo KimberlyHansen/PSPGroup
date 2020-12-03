@@ -85,9 +85,10 @@ print("Total amount of clusterd points clumped", clumpedData " and total dispers
 print("Number of areas and points analyed over", inputyear "years in", inputRegion "region")
 print()
 print("************************************************************************")
-print("Download the new shapefile with all you clustered data: ")
+print("A shapefile with all your clustered data will be downloaded: ")
 
-aprx.saveACopy(r"userOutputData.lyrx")
+#aprx.saveACopy(r"userOutputData.lyrx")
+#lyt.exportToPDF
 
 answer = input("Would you like to upload another file? Y for Yes OR N for No?:  ")
 
