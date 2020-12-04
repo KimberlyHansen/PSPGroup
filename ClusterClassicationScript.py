@@ -3,6 +3,14 @@
 All ModelBuilder functionality may not be exported. Edits may be required for equivalency with the original model.
 """
 
+#Course components to include: 
+#repetition - repeat files, or for ____ in ____ --> tool - maybe also to count outputs? 
+#modularization - programmer-defined functions - one for each ArcPy tool -- make sure it's functioning! 
+#string manipulation - ? 
+#selection - use IF features and booleans to select random/clumped/dispersed
+#read input files, write to table from Arc 
+#package all files into one folder? 
+
 import arcpy
 
 # To allow overwriting the outputs change the overwrite option to true.
