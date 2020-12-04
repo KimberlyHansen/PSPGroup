@@ -4,6 +4,8 @@
 # and are behavior by classifying the different cluster type i.e clumped, dispersed, random. 
 import csv
 import arcpy
+# To allow overwriting the outputs change the overwrite option to true.
+arcpy.env.overwriteOutput = False
 
 print("Data Input from Modis Forest Fire Occurences")
 print()
@@ -42,7 +44,7 @@ print("************************************************************************"
 
 
 
-arcpy.env.overwriteOutput = True
+# arcpy.env.overwriteOutput = True
 
 firePointsTable = r"C:\GEOM67\GroupProject\BC_fire_points_2019.csv"
 
@@ -87,6 +89,9 @@ print()
 print("************************************************************************")
 print("A shapefile with all your clustered data will be downloaded: ")
 
+
+
+#tell user where to find there shapefile
 #aprx.saveACopy(r"userOutputData.lyrx")
 #lyt.exportToPDF
 
@@ -94,3 +99,13 @@ answer = input("Would you like to upload another file? Y for Yes OR N for No?:  
 
     if answer.upper() == "Y" :        
         break
+
+
+
+
+
+# how to count number of total ID's (if loop)
+# print out csv file
+# shape files will output to workspace
+
+# Work on dictionary for provices and territroies 

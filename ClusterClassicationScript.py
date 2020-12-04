@@ -17,13 +17,14 @@ import arcpy
 arcpy.env.overwriteOutput = False
 
 # Script parameters
-Boundary_Shapefile = arcpy.GetParameterAsText(0) or "Canada_Census_Divisions"
-Input_CSV_Table = arcpy.GetParameterAsText(1) or "Fire_Points_Canada_2019.csv"
-Coordinate_System = arcpy.GetParameterAsText(2) or "GEOGCS['GCS_North_American_1983',DATUM['D_North_American_1983',SPHEROID['GRS_1980',6378137.0,298.257222101]],PRIMEM['Greenwich',0.0],UNIT['Degree',0.0174532925199433]]"
-Time_Range = arcpy.GetParameterAsText(3) or "acq_date <= timestamp '19-9-30 16:59:1' And acq_date >= timestamp '19-5-1 16:59:31'"
-Location = arcpy.GetParameterAsText(4) or "PRNAME = 'British Columbia / Colombie-Britannique'"
-Clumped_Cluster_Distance = arcpy.GetParameterAsText(5) or "20 Kilometers"
-Dispersed_Cluster_Distance = arcpy.GetParameterAsText(6) or "30 Kilometers"
+Boundary_Shapefile = arcpy.GetParameterAsText(0) or ""
+
+Input_CSV_Table = arcpy.GetParameterAsText(1) or ""
+Coordinate_System = arcpy.GetParameterAsText(2) or ""
+Time_Range = arcpy.GetParameterAsText(3) or " "
+Location = arcpy.GetParameterAsText(4) or " "
+Clumped_Cluster_Distance = arcpy.GetParameterAsText(5) or " "
+Dispersed_Cluster_Distance = arcpy.GetParameterAsText(6) or " "
 # Local variables:
 Fire_Points_From_Table = r"C:\GEOM67_Program\GroupProject2\Fire_Cluster_Analysis_Model\Fire_Cluster_Analysis_Model\Fire_Cluster_Analysis_Model.gdb\Fire_Points_From_Table"
 Fire_Points_TimeFrame = r"C:\GEOM67_Program\GroupProject2\Fire_Cluster_Analysis_Model\Fire_Cluster_Analysis_Model\Fire_Cluster_Analysis_Model.gdb\Fire_Points_TimeFrame"
@@ -54,8 +55,8 @@ arcpy.Select_analysis(in_features=Boundary_Shapefile, out_feature_class=Area_Sel
 arcpy.Clip_analysis(in_features=Fire_Points_TimeFrame, clip_features=Area_Selection, out_feature_class=Fire_Points_Range_Clip, cluster_tolerance="")
 
 # Process: Density-based Clustering (2)
-tempEnvironment0 = arcpy.env.outputZFlag
-tempEnvironment0 = arcpy.env.outputZFlag
+# tempEnvironment0 = arcpy.env.outputZFlag
+# tempEnvironment0 = arcpy.env.outputZFlag
 arcpy.DensityBasedClustering_stats(in_features=Fire_Points_Range_Clip, output_features=Clumped_Clusters, cluster_method=String__Multi_scale__OPTICS__Clustering__2_, min_features_cluster="5", search_distance=Clumped_Cluster_Distance, cluster_sensitivity="")
 arcpy.env.outputZFlag = tempEnvironment0
 
