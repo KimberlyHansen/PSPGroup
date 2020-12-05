@@ -11,7 +11,7 @@ All ModelBuilder functionality may not be exported. Edits may be required for eq
 #read input files, write to table from Arc 
 #package all files into one folder? 
 
-import arcpy
+import arcpy, csv
 
 # To allow overwriting the outputs change the overwrite option to true.
 arcpy.env.overwriteOutput = False
@@ -71,3 +71,23 @@ arcpy.env.outputZFlag = tempEnvironment0
 
 # Process: Select (5)
 arcpy.Select_analysis(in_features=Dispersed_Clusters, out_feature_class=Random_Points, where_clause=SQL_Expression__3_)
+
+# Export outputs to shapefile 
+outWorkspace = "c:/CSV_Results"
+
+tableList = arcpy.ListTables
+for dbaseTable in tableList: # check if there is a way to only select certain tables - don't need inputs, just outputs
+  outTable = os.path.join(outWorkspace, os.path.splitext(dbasetable)[0])
+  arcpy.CopyRows_management(dbaseTable, outTable.csv) 
+  
+# these files can then be read back in and counted for the results ie. 
+
+with open("/CSV_Results/Clumped_Clusters.csv","r") as csv_file: # check path reference 
+  csv_reader = csv.reader(csv_file, delimiter=',') 
+  for lines in csv_reader: 
+     print(lines[2]) # third field in table, should be list index 2? 
+
+
+
+
+
