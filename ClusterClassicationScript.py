@@ -10,8 +10,11 @@ All ModelBuilder functionality may not be exported. Edits may be required for eq
 #selection - use IF features and booleans to select random/clumped/dispersed
 #read input files, write to table from Arc 
 #package all files into one folder? 
-
 import arcpy, csv
+
+file_path = input("Please enter the file pathway in which you want to store the output geodatabase and csv files: ")
+#this file path needs to have forward slashes, unless we figure out a way to make r" work depending on the structure of the filepath
+
 
 # To allow overwriting the outputs change the overwrite option to true.
 arcpy.env.overwriteOutput = False
@@ -72,7 +75,7 @@ arcpy.env.outputZFlag = tempEnvironment0
 # Process: Select (5)
 arcpy.Select_analysis(in_features=Dispersed_Clusters, out_feature_class=Random_Points, where_clause=SQL_Expression__3_)
 
-# Export outputs to shapefile 
+# Export shapefile tables to csv's that can be worked with 
 outWorkspace = "c:/CSV_Results"
 
 tableList = arcpy.ListTables
@@ -82,12 +85,13 @@ for dbaseTable in tableList: # check if there is a way to only select certain ta
   
 # these files can then be read back in and counted for the results ie. 
 
-with open("/CSV_Results/Clumped_Clusters.csv","r") as csv_file: # check path reference 
+total_random_points = []
+
+with open(file_path + "random_point_rows.csv","r") as csv_file: # wasn't recognizing file in same folder, had to add file path
   csv_reader = csv.reader(csv_file, delimiter=',') 
   for lines in csv_reader: 
-     print(lines[2]) # third field in table, should be list index 2? 
+    total_random_points.append(lines[2]) # third field in table, should be list index 2? 
 
-
-
+print(len(total_random_points))
 
 
