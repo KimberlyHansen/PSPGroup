@@ -1,3 +1,4 @@
+import csv
 import arcpy
 
 arcpy.env.overwriteOutput = True
@@ -83,3 +84,5 @@ for ab in abbr:
     arcpy.stats.DensityBasedClustering(r"C:\GEOM67\GroupProject\clipped_points_{}.shp".format(ab), 
     r"C:\GEOM67\GroupProject\Dispersed_Cluster_{}.shp".format(ab),
      "OPTICS", minFeatures2, "30 Kilometers", "")
+
+
