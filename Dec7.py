@@ -133,6 +133,7 @@ try:
 
 except:
     print("An Error has occurred")
+
 except arcpy.ExecuteError:
     print(arcpy.GetMessages(2))  
     # Handle the code somehow
