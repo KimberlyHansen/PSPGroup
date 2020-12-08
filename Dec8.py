@@ -2,27 +2,39 @@ import arcpy, csv, os
 
 arcpy.env.overwriteOutput = True
 
-# Set local variables for output workspace, results geodatabase
-outWorkspace = r"C:\GEOM67\GroupProject"
-outGDB = "results.gdb"
+# User input for output file path (added by Aaron Dec. 9, 2020)
+outWorkspace = str(input("Please enter the file path you wish to store your outputs in (e.g. r\"C:\GEOM67\"): "))
 
-# Create the file geodatabase
-arcpy.CreateFileGDB_management(outWorkspace, outGDB)
+outWorkspace = outWorkspace.rstrip('"')
+outWorkspace = outWorkspace.rstrip("'")
 
-firePointsTable = r"C:\GEOM67\GroupProject\modis_2019_Canada.csv"
+print(outWorkspace)
 
-# converting the csv modis file into a point shapefile
-arcpy.management.XYTableToPoint(firePointsTable, r"C:\GEOM67\GroupProject\firePoints.shp", 
+
+# User input for the fire points csv file (added by Aaron Dec. 9, 2020)
+firePointsTable = str(input("Please enter the file path to the 'modis_2019_Canada.csv' file (e.g. r\"C:\GEOM67\modis_2019_Canada.csv\"): "))
+
+firePointsTable = firePointsTable.rstrip('"')
+firePointsTable = firePointsTable.rstrip("'")
+
+
+# User input for the census tracts shapefile file path (added by Aaron Dec. 9, 2020)
+census_tracts = str(input("Please enter the file path to the 'lpr_000b16a_e.shp' file (e.g. r\"C:\GEOM67\lpr_000b16a_e.shp\"): ")) 
+
+census_tracts = census_tracts.rstrip('"')
+census_tracts = census_tracts.rstrip("'")
+
+
+
+# converting the csv modis file into a point shapefile (added by Aaron Dec. 9, 2020)
+arcpy.management.XYTableToPoint(firePointsTable, outWorkspace + "\{}irePoints.shp".format("f"), 
 "longitude", "latitude","","")             # optional parameters: {z_field}, {coordinate_system})
 
-# assigning the fire point shapefile to a variable
-points = r"C:\GEOM67\GroupProject\firePoints.shp"
-
-# Canada census tract province and territory boundary shapefile 
-census_tracts = r"C:\GEOM67\GroupProject\lpr_000b16a_e\lpr_000b16a_e.shp"
+# assigning the fire point shapefile to a variable (added by Aaron Dec. 9, 2020)
+points = outWorkspace + "\{}irePoints.shp".format("f")
 
 
-# Below is a dictionary holding province name values.
+# Below is a dictionary holding province name values. (added by Aaron Dec. 4, 2020)
 # The first value of each key represents the values as exactly written in the PRNAME field in the 
 # census tracts file. The second value of each key is the abbrevation of those names which will 
 # be used for file names during the arcpy geoprocessing below.
@@ -41,7 +53,7 @@ study_area = []
 # creating an empty list to hold inputted province name abbreviations (from dictionary)
 abbr = []
 
-# while loop that lets the user input as many provinces/territories they want to analyze
+# while loop that lets the user input as many provinces/territories they want to analyze (added by Aaron Dec. 4, 2020)
 while True:
     provTer = float(input("Please enter the number corresponding to the province/territory you want to analyze: "))
     study_area.append(provinces_territories[provTer][0]) # Province name from dictionary is appended to study_area
@@ -56,22 +68,23 @@ while True:
 
 print(study_area)
 
+
 # source for looping two lists simultaneously: https://stackoverflow.com/questions/1663807/how-to-iterate-through-two-lists-in-parallel
-# this loop iterates through each inputted province/territory name and abbreviation
+# this loop iterates through each inputted province/territory name and abbreviation (added by Aaron Dec. 4, 2020)
 for region, ab in zip(study_area, abbr): # a shapefile of each inputted province/territory is created
-    arcpy.Select_analysis(census_tracts, r"C:\GEOM67\GroupProject\bound{}.shp".format(ab),
+    arcpy.Select_analysis(census_tracts, outWorkspace + '\{}ound{}.shp"'.format(b, ab),
     "PRNAME = '{}'".format(region)) # each output will have its province/territory abbrevation at the end  
      
 
 
-# each previous clipped province/territory is then used to clip the fire points
+# each previous clipped province/territory is then used to clip the fire points (added by Aaron Dec. 4, 2020)
 for ab in abbr:
-    arcpy.Clip_analysis(points, r"C:\GEOM67\GroupProject\bound{}.shp".format(ab),
-    r"C:\GEOM67\GroupProject\clipped_points_{}.shp".format(ab))
+    arcpy.Clip_analysis(points, outWorkspace + '\{}ound{}.shp"'.format(b, ab),
+    outWorkspace + '\clipped_points_{}.shp"'.format(ab))
 # each output will have its province/territory abbrevation at the end
 
 
-# user is asked to input the min amount of features to clipped for each analysis
+# user is asked to input the min amount of features to clipped for each analysis (added by Aaron Dec. 4, 2020)
 minFeatures1 = float(input("Please enter the minimum amount of features for the clumped cluster analysis: "))
 minFeatures2 = float(input("Please enter the minimum amount of features for the dispersed cluster analysis: "))
 
@@ -79,26 +92,26 @@ srcDistance1 = input("Please enter the kilometer search distance for identifying
 srcDistance2 = input("Please enter the kilometer search distance for identifying dispersed clusters (must be larger than first search distance): ") + " Kilometers"
 
 
-# Clumped cluster
+# Clumped cluster (added by Aaron Dec. 4, 2020)
 # For loop iterates for each inputted province's/territory's clipped fire points
 for ab in abbr:
-    arcpy.stats.DensityBasedClustering(r"C:\GEOM67\GroupProject\clipped_points_{}.shp".format(ab), 
-    r"C:\GEOM67\GroupProject\Clumped_Cluster_{}.shp".format(ab), 
+    arcpy.stats.DensityBasedClustering(outWorkspace + '\clipped_points_{}.shp"'.format(ab), 
+    outWorkspace + '\Clumped_Cluster_{}.shp"'.format(ab), 
     "OPTICS", minFeatures1, srcDistance1, "") 
 
 # Dispersed cluster
 # For loop iterates for each input province/territory clipped fire points
 
 for ab in abbr: 
-    arcpy.Select_analysis(r'C:\GEOM67\GroupProject\Clumped_Cluster_{}.shp'.format(ab),r'C:\GEOM67\GroupProject\Dispersed_Input_{}.shp'.format(ab),'"CLUSTER_ID" = -1')
+    arcpy.Select_analysis(outWorkspace + '\Clumped_Cluster_{}.shp"'.format(ab), outWorkspace + '\Dispersed_Input_{}.shp"'.format(ab),'"CLUSTER_ID" = -1')
 
 for ab in abbr:
-    arcpy.stats.DensityBasedClustering(r"C:\GEOM67\GroupProject\Dispersed_Input_{}.shp".format(ab), 
-    r"C:\GEOM67\GroupProject\Dispersed_Cluster_{}.shp".format(ab),
+    arcpy.stats.DensityBasedClustering(outWorkspace + '\Dispersed_Input_{}.shp"'.format(ab), 
+    outWorkspace + '\Dispersed_Cluster_{}.shp"'.format(ab),
      "OPTICS", minFeatures2, srcDistance2, "")
 
 for ab in abbr: 
-    arcpy.Select_analysis(r'C:\GEOM67\GroupProject\Dispersed_Cluster_{}.shp'.format(ab),r'C:\GEOM67\GroupProject\Random_Points{}.shp'.format(ab),'"CLUSTER_ID" = -1')
+    arcpy.Select_analysis(outWorkspace + '\Dispersed_Cluster_{}.shp"'.format(ab), outWorkspace + '\Random_Points{}.shp"'.format(ab),'"CLUSTER_ID" = -1')
 
 tableList = arcpy.ListTables
 for dbaseTable in tableList(): # check if there is a way to only select certain tables - don't need inputs, just outputs
