@@ -2,6 +2,7 @@ import arcpy
 
 arcpy.env.overwriteOutput = True
 
+#change to user input
 firePointsTable = r"C:\GEOM67\GroupProject\modis_2019_Canada.csv"
 
 # converting the csv modis file into a point shapefile
@@ -68,8 +69,6 @@ for ab in abbr:
 minFeatures1 = float(input("Please enter the minimum amount of features for the clumped cluster analysis: "))
 minFeatures2 = float(input("Please enter the minimum amount of features for the dispersed cluster analysis: "))
 
-
-
 # Clumped cluster
 # For loop iterates for each inputted province's/territory's clipped fire points
 for ab in abbr:
@@ -83,3 +82,4 @@ for ab in abbr:
     arcpy.stats.DensityBasedClustering(r"C:\GEOM67\GroupProject\clipped_points_{}.shp".format(ab), 
     r"C:\GEOM67\GroupProject\Dispersed_Cluster_{}.shp".format(ab),
      "OPTICS", minFeatures2, "30 Kilometers", "")
+
