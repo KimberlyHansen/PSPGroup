@@ -84,7 +84,3 @@ for ab in abbr:
     r"C:\GEOM67\GroupProject\Dispersed_Cluster_{}.shp".format(ab),
      "OPTICS", minFeatures2, "30 Kilometers", "")
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 22bfeb77f38444d9deb8e1997c0420633b4d9aaf
