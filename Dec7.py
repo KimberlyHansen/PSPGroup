@@ -1,7 +1,7 @@
 import arcpy, csv, os, sys
 
 try: 
-    arcpy.env.overwriteOutput = True
+    arcpy.env.overwriteOutput = True #should this be false?
 
     # Set local variables for output workspace, results geodatabase
     outWorkspace = r"C:\GEOM67\GroupProject"
@@ -129,7 +129,7 @@ try:
         total_random_points.append(lines[2]) # third field in table, should be list index 2? 
 
     print(len(total_random_points))
-    
+
 
 except:
     print("An Error has occurred")
