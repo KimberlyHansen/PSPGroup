@@ -3,7 +3,6 @@ import arcpy
 
 arcpy.env.overwriteOutput = True
 
-#change to user input
 firePointsTable = r"C:\GEOM67\GroupProject\modis_2019_Canada.csv"
 
 # converting the csv modis file into a point shapefile
@@ -12,6 +11,27 @@ arcpy.management.XYTableToPoint(firePointsTable, r"C:\GEOM67\GroupProject\firePo
 
 # assigning the fire point shapefile to a variable
 points = r"C:\GEOM67\GroupProject\firePoints.shp"
+
+# NEED: to set up a select statement on that point shapefile to incorporate the time range (I'm not sure how much of this code works yet) 
+
+month = input("Please enter the month (2019) you are interested in analyzing: ")
+
+
+month_range = {'January':("timestamp '19-1-1 00:00:00'","timestamp '19-1-31' 23:59:59"), 
+'February':("timestamp '19-2-1 00:00:00'","timestamp '19-2-28' 23:59:59"),
+'March':("timestamp '19-3-1 00:00:00'","timestamp '19-3-31' 23:59:59"), 'April':("timestamp '19-4-1 00:00:00'","timestamp '19-4-30' 23:59:59"), 
+'May':("timestamp '19-5-1 00:00:00'","timestamp '19-5-31' 23:59:59") , 'June':("timestamp '19-6-1 00:00:00'","timestamp '19-6-30' 23:59:59"), 'July':("timestamp '19-7-1 00:00:00'","timestamp '19-7-31' 23:59:59"), 'August':("timestamp '19-8-1 00:00:00'","timestamp '19-8-31' 23:59:59"),
+ 'September':("timestamp '19-9-1 00:00:00'","timestamp '19-9-30' 23:59:59"), 'October':("timestamp '19-10-1 00:00:00'","timestamp '19-10-31' 23:59:59"),
+'November':("timestamp '19-1-1 00:00:00'","timestamp '19-1-30' 23:59:59"), 'December':("timestamp '19-12-1 00:00:00'","timestamp '19-12-31' 23:59:59")}
+
+for key 1 in dictionary --> "acq_date <= [list element 1]' And acq_date >= [list element 2]" 
+
+# Process: Select (2)
+arcpy.Select_analysis(in_features=Fire_Points_From_Table, out_feature_class=Fire_Points_TimeFrame, where_clause=Time_Range)
+
+Time_Range = arcpy.GetParameterAsText(3) or " "
+
+
 
 # Canada census tract province and territory boundary shapefile 
 census_tracts = r"C:\GEOM67\GroupProject\lpr_000b16a_e\lpr_000b16a_e.shp"
@@ -70,12 +90,19 @@ for ab in abbr:
 minFeatures1 = float(input("Please enter the minimum amount of features for the clumped cluster analysis: "))
 minFeatures2 = float(input("Please enter the minimum amount of features for the dispersed cluster analysis: "))
 
+
+
 # Clumped cluster
 # For loop iterates for each inputted province's/territory's clipped fire points
 for ab in abbr:
     arcpy.stats.DensityBasedClustering(r"C:\GEOM67\GroupProject\clipped_points_{}.shp".format(ab), 
     r"C:\GEOM67\GroupProject\Clumped_Cluster_{}.shp".format(ab), 
     "OPTICS", minFeatures1, "20 Kilometers", "") 
+  
+# NEED: to select 'noise' for the cluster analysis to input into dispersed cluster classification, eg. (code not functional yet) 
+# Process: Select (4)
+arcpy.Select_analysis(in_features=Clumped_Clusters, out_feature_class=Dispersed_Input, where_clause=SQL_Expression__5_)
+SQL_Expression__5_ = "CLUSTER_ID = -1"
 
 # Dispersed cluster
 # For loop iterates for each inputted province's/territory's clipped fire points
@@ -83,8 +110,30 @@ for ab in abbr:
     arcpy.stats.DensityBasedClustering(r"C:\GEOM67\GroupProject\clipped_points_{}.shp".format(ab), 
     r"C:\GEOM67\GroupProject\Dispersed_Cluster_{}.shp".format(ab),
      "OPTICS", minFeatures2, "30 Kilometers", "")
+  
+# NEED: to select 'noise' for the second cluster analysis to classify as dispersed clusters classification, eg. (code not functional yet) 
+# Process: Select (4)
+arcpy.Select_analysis(in_features=Dispersed_Clusters, out_feature_class=Random_Points, where_clause=SQL_Expression__5_)
+SQL_Expression__5_ = "CLUSTER_ID = -1"
 
-<<<<<<< HEAD
-=======
+# added code below not checked for functionality in script yet - need to get them to work with multiple inputs 
+# Export shapefile tables to csv's that can be worked with 
 
->>>>>>> 22bfeb77f38444d9deb8e1997c0420633b4d9aaf
+tableList = arcpy.ListTables
+for dbaseTable in tableList: # check if there is a way to only select certain tables - don't need inputs, just outputs
+  outTable = os.path.join(outWorkspace, os.path.splitext(dbasetable)[0])
+  arcpy.CopyRows_management(dbaseTable, outTable.csv) 
+ 
+  
+# these files can then be read back in and counted for the results ie. 
+
+total_random_points = []
+total_clumped_clusters = []
+total_dispersed_clusters = []
+
+with open(file_path + "random_point_rows.csv","r") as csv_file: # wasn't recognizing file in same folder, had to add file path
+  csv_reader = csv.reader(csv_file, delimiter=',') 
+  for lines in csv_reader: 
+    total_random_points.append(lines[2]) # third field in table, should be list index 2? 
+
+print(len(total_random_points))

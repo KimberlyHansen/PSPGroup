@@ -28,6 +28,13 @@ Time_Range = arcpy.GetParameterAsText(3) or " "
 Location = arcpy.GetParameterAsText(4) or " "
 Clumped_Cluster_Distance = arcpy.GetParameterAsText(5) or " "
 Dispersed_Cluster_Distance = arcpy.GetParameterAsText(6) or " "
+
+if Coordinate_System == "Unknown":
+        print("{2} has an unknown Coordinate system".format(fc))
+
+else:
+        print("{2}".format(fc, Coordinate_System))
+    
 # Local variables:
 Fire_Points_From_Table = r"C:\GEOM67_Program\GroupProject2\Fire_Cluster_Analysis_Model\Fire_Cluster_Analysis_Model\Fire_Cluster_Analysis_Model.gdb\Fire_Points_From_Table"
 Fire_Points_TimeFrame = r"C:\GEOM67_Program\GroupProject2\Fire_Cluster_Analysis_Model\Fire_Cluster_Analysis_Model\Fire_Cluster_Analysis_Model.gdb\Fire_Points_TimeFrame"
