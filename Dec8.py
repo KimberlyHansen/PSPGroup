@@ -14,15 +14,9 @@ print(outWorkspace)
 # User input for the fire points csv file (added by Aaron Dec. 9, 2020)
 firePointsTable = str(input("Please enter the file path to the 'modis_2019_Canada.csv' file (e.g. r\"C:\GEOM67\modis_2019_Canada.csv\"): "))
 
-firePointsTable = firePointsTable.rstrip('"')
-firePointsTable = firePointsTable.rstrip("'")
-
 
 # User input for the census tracts shapefile file path (added by Aaron Dec. 9, 2020)
 census_tracts = str(input("Please enter the file path to the 'lpr_000b16a_e.shp' file (e.g. r\"C:\GEOM67\lpr_000b16a_e.shp\"): ")) 
-
-census_tracts = census_tracts.rstrip('"')
-census_tracts = census_tracts.rstrip("'")
 
 
 
