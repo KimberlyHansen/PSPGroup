@@ -1,7 +1,13 @@
-import csv
-import arcpy
+import arcpy, csv, os
 
 arcpy.env.overwriteOutput = True
+
+# Set local variables for output workspace, results geodatabase
+outWorkspace = r"C:\GEOM67\GroupProject"
+outGDB = "results.gdb"
+
+# Create the file geodatabase
+arcpy.CreateFileGDB_management(outWorkspace, outGDB)
 
 firePointsTable = r"C:\GEOM67\GroupProject\modis_2019_Canada.csv"
 
@@ -11,27 +17,6 @@ arcpy.management.XYTableToPoint(firePointsTable, r"C:\GEOM67\GroupProject\firePo
 
 # assigning the fire point shapefile to a variable
 points = r"C:\GEOM67\GroupProject\firePoints.shp"
-
-# NEED: to set up a select statement on that point shapefile to incorporate the time range (I'm not sure how much of this code works yet) 
-
-month = input("Please enter the month (2019) you are interested in analyzing: ")
-
-
-month_range = {'January':("timestamp '19-1-1 00:00:00'","timestamp '19-1-31' 23:59:59"), 
-'February':("timestamp '19-2-1 00:00:00'","timestamp '19-2-28' 23:59:59"),
-'March':("timestamp '19-3-1 00:00:00'","timestamp '19-3-31' 23:59:59"), 'April':("timestamp '19-4-1 00:00:00'","timestamp '19-4-30' 23:59:59"), 
-'May':("timestamp '19-5-1 00:00:00'","timestamp '19-5-31' 23:59:59") , 'June':("timestamp '19-6-1 00:00:00'","timestamp '19-6-30' 23:59:59"), 'July':("timestamp '19-7-1 00:00:00'","timestamp '19-7-31' 23:59:59"), 'August':("timestamp '19-8-1 00:00:00'","timestamp '19-8-31' 23:59:59"),
- 'September':("timestamp '19-9-1 00:00:00'","timestamp '19-9-30' 23:59:59"), 'October':("timestamp '19-10-1 00:00:00'","timestamp '19-10-31' 23:59:59"),
-'November':("timestamp '19-1-1 00:00:00'","timestamp '19-1-30' 23:59:59"), 'December':("timestamp '19-12-1 00:00:00'","timestamp '19-12-31' 23:59:59")}
-
-for key 1 in dictionary --> "acq_date <= [list element 1]' And acq_date >= [list element 2]" 
-
-# Process: Select (2)
-arcpy.Select_analysis(in_features=Fire_Points_From_Table, out_feature_class=Fire_Points_TimeFrame, where_clause=Time_Range)
-
-Time_Range = arcpy.GetParameterAsText(3) or " "
-
-
 
 # Canada census tract province and territory boundary shapefile 
 census_tracts = r"C:\GEOM67\GroupProject\lpr_000b16a_e\lpr_000b16a_e.shp"
@@ -90,6 +75,8 @@ for ab in abbr:
 minFeatures1 = float(input("Please enter the minimum amount of features for the clumped cluster analysis: "))
 minFeatures2 = float(input("Please enter the minimum amount of features for the dispersed cluster analysis: "))
 
+srcDistance1 = input("Please enter the kilometer search distance for identifying clumped clusters: ") + " Kilometers"
+srcDistance2 = input("Please enter the kilometer search distance for identifying dispersed clusters (must be larger than first search distance): ") + " Kilometers"
 
 
 # Clumped cluster
@@ -97,33 +84,31 @@ minFeatures2 = float(input("Please enter the minimum amount of features for the 
 for ab in abbr:
     arcpy.stats.DensityBasedClustering(r"C:\GEOM67\GroupProject\clipped_points_{}.shp".format(ab), 
     r"C:\GEOM67\GroupProject\Clumped_Cluster_{}.shp".format(ab), 
-    "OPTICS", minFeatures1, "20 Kilometers", "") 
-  
-# NEED: to select 'noise' for the cluster analysis to input into dispersed cluster classification, eg. (code not functional yet) 
-# Process: Select (4)
-arcpy.Select_analysis(in_features=Clumped_Clusters, out_feature_class=Dispersed_Input, where_clause=SQL_Expression__5_)
-SQL_Expression__5_ = "CLUSTER_ID = -1"
+    "OPTICS", minFeatures1, srcDistance1, "") 
 
 # Dispersed cluster
-# For loop iterates for each inputted province's/territory's clipped fire points
-for ab in abbr:
-    arcpy.stats.DensityBasedClustering(r"C:\GEOM67\GroupProject\clipped_points_{}.shp".format(ab), 
-    r"C:\GEOM67\GroupProject\Dispersed_Cluster_{}.shp".format(ab),
-     "OPTICS", minFeatures2, "30 Kilometers", "")
-  
-# NEED: to select 'noise' for the second cluster analysis to classify as dispersed clusters classification, eg. (code not functional yet) 
-# Process: Select (4)
-arcpy.Select_analysis(in_features=Dispersed_Clusters, out_feature_class=Random_Points, where_clause=SQL_Expression__5_)
-SQL_Expression__5_ = "CLUSTER_ID = -1"
+# For loop iterates for each input province/territory clipped fire points
 
-# added code below not checked for functionality in script yet - need to get them to work with multiple inputs 
-# Export shapefile tables to csv's that can be worked with 
+for ab in abbr: 
+    arcpy.Select_analysis(r'C:\GEOM67\GroupProject\Clumped_Cluster_{}.shp'.format(ab),r'C:\GEOM67\GroupProject\Dispersed_Input_{}.shp'.format(ab),'"CLUSTER_ID" = -1')
+
+for ab in abbr:
+    arcpy.stats.DensityBasedClustering(r"C:\GEOM67\GroupProject\Dispersed_Input_{}.shp".format(ab), 
+    r"C:\GEOM67\GroupProject\Dispersed_Cluster_{}.shp".format(ab),
+     "OPTICS", minFeatures2, srcDistance2, "")
+
+for ab in abbr: 
+    arcpy.Select_analysis(r'C:\GEOM67\GroupProject\Dispersed_Cluster_{}.shp'.format(ab),r'C:\GEOM67\GroupProject\Random_Points{}.shp'.format(ab),'"CLUSTER_ID" = -1')
 
 tableList = arcpy.ListTables
-for dbaseTable in tableList: # check if there is a way to only select certain tables - don't need inputs, just outputs
-  outTable = os.path.join(outWorkspace, os.path.splitext(dbasetable)[0])
-  arcpy.CopyRows_management(dbaseTable, outTable.csv) 
- 
+for dbaseTable in tableList(): # check if there is a way to only select certain tables - don't need inputs, just outputs
+    if "Random_points" in tableList():
+        outTable = os.path.join(outWorkspace, os.path.splitext(dbaseTable)[0])
+        arcpy.CopyRows_management(dbaseTable, outTable.csv)
+    else: 
+        print("Table could not be found.")
+
+# try excepts: arcgisscripting.ExecuteError: ERROR 110141: The Minimum Number of Features per Cluster is greater than the number of features in the dataset.Failed to execute (DensityBasedClustering).
   
 # these files can then be read back in and counted for the results ie. 
 
