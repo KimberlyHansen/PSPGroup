@@ -6,14 +6,20 @@ arcpy.env.overwriteOutput = True
 outWorkspace = r"C:\GEOM67\GroupProject"
 outGDB = "results.gdb"
 
-# Create the file geodatabase
+# Create's the file geodatabase
 arcpy.CreateFileGDB_management(outWorkspace, outGDB)
 
 firePointsTable = r"C:\GEOM67\GroupProject\modis_2019_Canada.csv"
 
 # converting the csv modis file into a point shapefile
 arcpy.management.XYTableToPoint(firePointsTable, r"C:\GEOM67\GroupProject\firePoints.shp", 
-"longitude", "latitude","","")             # optional parameters: {z_field}, {coordinate_system})
+"longitude", "latitude","","")   
+# optional parameters: {z_field}, {coordinate_system}) We could have this
+# Coordinate_System = arcpy.GetParameterAsText(2) or ""
+#   if Coordinate_System == "Unknown":
+#           print("{2} has an unknown Coordinate system".format(fc))
+#   else:
+#           print("{2}".format(fc, Coordinate_System))
 
 # assigning the fire point shapefile to a variable
 points = r"C:\GEOM67\GroupProject\firePoints.shp"
