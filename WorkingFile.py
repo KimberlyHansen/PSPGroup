@@ -4,6 +4,7 @@ try:
     # To allow overwriting the outputs change the overwrite option to true.
     arcpy.env.overwriteOutput = True
 
+    # Hard Coded CSV document 
     firePointsTable = "modis_2019_Canada.csv"
 
     # converting the csv modis file into a point shapefile (added by Aaron Dec. 4, 2020)
