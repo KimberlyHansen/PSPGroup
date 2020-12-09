@@ -71,14 +71,14 @@ try:
     # source for looping two lists simultaneously: https://stackoverflow.com/questions/1663807/how-to-iterate-through-two-lists-in-parallel
     # this loop iterates through each inputted province/territory name and abbreviation
     for region, ab in zip(study_area, abbr): # a shapefile of each inputted province/territory is created
-        arcpy.Select_analysis(census_tracts, "output\bound{}.shp".format(ab),
+        arcpy.Select_analysis(census_tracts, "output\{}ound{}.shp".format("b", ab),
         "PRNAME = '{}'".format(region)) # each output will have its province/territory abbrevation at the end  
         
 
     # (added by Aaron Dec. 4, 2020)
     # each previous clipped province/territory is then used to clip the fire points
     for ab in abbr:
-        arcpy.Clip_analysis(points, "output\bound{}.shp".format(ab),
+        arcpy.Clip_analysis(points, "output\{}ound{}.shp".format("b", ab),
         "output\clipped_points_{}.shp".format(ab))
     # each output will have its province/territory abbrevation at the end
 
