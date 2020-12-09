@@ -7,17 +7,17 @@ try:
     # Hard Coded CSV document 
     firePointsTable = "modis_2019_Canada.csv"
 
-    # converting the csv modis file into a point shapefile (added by Aaron Dec. 4, 2020)
+    # converting the csv modis file into a point shapefile 
     arcpy.management.XYTableToPoint(firePointsTable, "output\canadafirepoints.shp", 
     "longitude", "latitude","","")   
 
-    # assigning the fire point shapefile to a variable (added by Aaron Dec. 8, 2020)
+    # assigning the fire point shapefile to a variable 
     points = "output\canadafirepoints.shp"
 
-    # Canada census tract province and territory boundary shapefile (added by Aaron Dec. 8, 2020)
+    # Canada census tract province and territory boundary shapefile 
     census_tracts = "lpr_000b16a_e\lpr_000b16a_e.shp"
 
-    # Below is a dictionary holding province name values. (added by Aaron Dec. 4, 2020)
+    # Below is a dictionary holding province name values. 
     # The first value of each key represents the values as exactly written in the PRNAME field in the 
     # census tracts file. The second value of each key is the abbrevation of those names which will 
     # be used for file names during the arcpy geoprocessing below.
@@ -37,7 +37,7 @@ try:
     abbr = []
 
     # while loop that lets the user input as many provinces/territories they want to analyze
-    while True: # (added by Aaron Dec. 4, 2020)
+    while True: 
         provTer = float(input("Please enter the number corresponding to the province/territory you want to analyze: "))
         study_area.append(provinces_territories[provTer][0]) # Province name from dictionary is appended to study_area
         abbr.append(provinces_territories[provTer][1]) # Province abbreviation is appended to abbr
@@ -50,14 +50,14 @@ try:
 
     print(study_area)
     
-    # (added by Aaron Dec. 4, 2020)
+    
     # source for looping two lists simultaneously: https://stackoverflow.com/questions/1663807/how-to-iterate-through-two-lists-in-parallel
     # this loop iterates through each inputted province/territory name and abbreviation
     for region, ab in zip(study_area, abbr): # a shapefile of each inputted province/territory is created
         arcpy.Select_analysis(census_tracts, "output\{}ound{}.shp".format("b", ab),
         "PRNAME = '{}'".format(region)) # each output will have its province/territory abbrevation at the end  
         
-    # (added by Aaron Dec. 4, 2020)
+    
     # each previous clipped province/territory is then used to clip the fire points
     for ab in abbr:
         arcpy.Clip_analysis(points, "output\{}ound{}.shp".format("b", ab),
@@ -71,7 +71,7 @@ try:
     srcDistance1 = input("Please enter the kilometer search distance for identifying clumped clusters: ") + " Kilometers"
     srcDistance2 = input("Please enter the kilometer search distance for identifying dispersed clusters (must be larger than first search distance): ") + " Kilometers"
 
-    # Clumped cluster (added by Aaron Dec. 4, 2020)
+    # Clumped cluster
     # For loop iterates for each inputted province's/territory's clipped fire points
     for ab in abbr:
         print("Creating a clumped cluster shapefile for", ab)
