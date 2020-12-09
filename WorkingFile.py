@@ -112,7 +112,10 @@ try:
     for ab in abbr: 
         arcpy.Select_analysis("output\Dispersed_Cluster_{}.shp".format(ab),"output\Random_Points{}.shp".format(ab),'"CLUSTER_ID" = -1')
 
-
+    print()
+    print("************************************************************************")
+    print("A shapefile with all your clustered data will be downloaded: ")
+    print()
 
 
 except arcpy.ExecuteError:
