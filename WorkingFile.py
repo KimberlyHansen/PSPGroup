@@ -3,35 +3,17 @@ import arcpy, csv, os, sys
 try: 
     arcpy.env.overwriteOutput = True #should this be false?
 
-    # Set local variables for output workspace, results geodatabase
-    # outWorkspace = r"C:\GEOM67\GroupProject"
-    # outGDB = "results.gdb"
-
-    # Create's the file geodatabase
-    # arcpy.CreateFileGDB_management(outWorkspace, outGDB)
-
     firePointsTable = "modis_2019_Canada.csv"
-
-
 
     # converting the csv modis file into a point shapefile (added by Aaron Dec. 4, 2020)
     arcpy.management.XYTableToPoint(firePointsTable, "output\canadafirepoints.shp", 
     "longitude", "latitude","","")   
-    # optional parameters: {z_field}, {coordinate_system}) We could have this
-    # Coordinate_System = arcpy.GetParameterAsText(2) or ""
-    #   if Coordinate_System == "Unknown":
-    #           print("{2} has an unknown Coordinate system".format(fc))
-    #   else:
-    #           print("{2}".format(fc, Coordinate_System))
-
-
 
     # assigning the fire point shapefile to a variable (added by Aaron Dec. 8, 2020)
     points = "output\canadafirepoints.shp"
 
     # Canada census tract province and territory boundary shapefile (added by Aaron Dec. 8, 2020)
     census_tracts = "lpr_000b16a_e\lpr_000b16a_e.shp"
-
 
     # Below is a dictionary holding province name values. (added by Aaron Dec. 4, 2020)
     # The first value of each key represents the values as exactly written in the PRNAME field in the 
@@ -64,7 +46,6 @@ try:
         if end.upper() == 'N' :
             break
 
-
     print(study_area)
     
     # (added by Aaron Dec. 4, 2020)
@@ -74,7 +55,6 @@ try:
         arcpy.Select_analysis(census_tracts, "output\{}ound{}.shp".format("b", ab),
         "PRNAME = '{}'".format(region)) # each output will have its province/territory abbrevation at the end  
         
-
     # (added by Aaron Dec. 4, 2020)
     # each previous clipped province/territory is then used to clip the fire points
     for ab in abbr:
@@ -82,14 +62,12 @@ try:
         "output\clipped_points_{}.shp".format(ab))
     # each output will have its province/territory abbrevation at the end
 
-
     # user is asked to input the min amount of features to clipped for each analysis
     minFeatures1 = float(input("Please enter the minimum amount of features for the clumped cluster analysis: "))
     minFeatures2 = float(input("Please enter the minimum amount of features for the dispersed cluster analysis: "))
 
     srcDistance1 = input("Please enter the kilometer search distance for identifying clumped clusters: ") + " Kilometers"
     srcDistance2 = input("Please enter the kilometer search distance for identifying dispersed clusters (must be larger than first search distance): ") + " Kilometers"
-
 
     # Clumped cluster (added by Aaron Dec. 4, 2020)
     # For loop iterates for each inputted province's/territory's clipped fire points
