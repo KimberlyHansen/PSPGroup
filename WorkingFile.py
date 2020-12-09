@@ -150,19 +150,13 @@ try:
     print()
     print("************************************************************************")
     print()
-    print("A shapefile with all your clustered are downloaded into the output folder: ")
+    print("A shapefile with all your clustered are downloaded into the output folder.")
     print()
-        # Michelle Marano
-        # User has option to use the program again
-        stop = input("Do you want to stop entering values (Y/N)? ")
-        print()
-        if end.upper() == 'N' :
-            break
+
 
 # Michelle Marano
 except arcpy.ExecuteError:
     print(arcpy.GetMessages(2))  
-    # Handle the code somehow
 except Exception:
     e = sys.exc_info()[1]
     print(e.args[0])
