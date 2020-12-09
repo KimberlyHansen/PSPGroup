@@ -4,7 +4,6 @@ try:
     # To allow overwriting the outputs change the overwrite option to true.
     arcpy.env.overwriteOutput = True
 
-    # Hard Coded CSV document 
     firePointsTable = "modis_2019_Canada.csv"
 
     # converting the csv modis file into a point shapefile (added by Aaron Dec. 4, 2020)
@@ -74,6 +73,7 @@ try:
     # Clumped cluster (added by Aaron Dec. 4, 2020)
     # For loop iterates for each inputted province's/territory's clipped fire points
     for ab in abbr:
+        print("Creating a clumped cluster shapefile for", ab)
         arcpy.stats.DensityBasedClustering("output\clipped_points_{}.shp".format(ab), 
         "output\Clumped_Cluster_{}.shp".format(ab), 
         "OPTICS", minFeatures1, srcDistance1, "") 
@@ -85,6 +85,7 @@ try:
         arcpy.Select_analysis("output\Clumped_Cluster_{}.shp".format(ab),"output\Dispersed_Input_{}.shp".format(ab), '"CLUSTER_ID" = -1')
 
     for ab in abbr:
+        print("Creating a dispersed cluster shapefile for: ", ab)
         arcpy.stats.DensityBasedClustering("output\Dispersed_Input_{}.shp".format(ab), 
         "output\Dispersed_Cluster_{}.shp".format(ab),
         "OPTICS", minFeatures2, srcDistance2, "")
@@ -96,11 +97,7 @@ try:
     print("************************************************************************")
     print("A shapefile with all your clustered data will be downloaded: ")
     print()
-        # User has option to use the program again
-        end = input("Do you want to stop entering values (Y/N)? ")
-        print()
-        if end.upper() == 'N' :
-            break
+
 
 except arcpy.ExecuteError:
     print(arcpy.GetMessages(2))  
