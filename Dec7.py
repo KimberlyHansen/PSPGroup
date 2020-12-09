@@ -4,16 +4,18 @@ try:
     arcpy.env.overwriteOutput = True #should this be false?
 
     # Set local variables for output workspace, results geodatabase
-    outWorkspace = r"C:\GEOM67\GroupProject"
-    outGDB = "results.gdb"
+    # outWorkspace = r"C:\GEOM67\GroupProject"
+    # outGDB = "results.gdb"
 
     # Create's the file geodatabase
     arcpy.CreateFileGDB_management(outWorkspace, outGDB)
 
-    firePointsTable = r"C:\GEOM67\GroupProject\modis_2019_Canada.csv"
+    firePointsTable = "modis_2019_Canada.csv"
+
+
 
     # converting the csv modis file into a point shapefile
-    arcpy.management.XYTableToPoint(firePointsTable, r"C:\GEOM67\GroupProject\firePoints.shp", 
+    arcpy.management.XYTableToPoint(firePointsTable, "output\canadafirepoints.shp", 
     "longitude", "latitude","","")   
     # optional parameters: {z_field}, {coordinate_system}) We could have this
     # Coordinate_System = arcpy.GetParameterAsText(2) or ""
@@ -22,11 +24,13 @@ try:
     #   else:
     #           print("{2}".format(fc, Coordinate_System))
 
+
+
     # assigning the fire point shapefile to a variable
-    points = r"C:\GEOM67\GroupProject\firePoints.shp"
+    points = "output\canadafirepoints.shp"
 
     # Canada census tract province and territory boundary shapefile 
-    census_tracts = r"C:\GEOM67\GroupProject\lpr_000b16a_e\lpr_000b16a_e.shp"
+    census_tracts = "lpr_000b16a_e\lpr_000b16a_e.shp"
 
 
     # Below is a dictionary holding province name values.
@@ -66,15 +70,15 @@ try:
     # source for looping two lists simultaneously: https://stackoverflow.com/questions/1663807/how-to-iterate-through-two-lists-in-parallel
     # this loop iterates through each inputted province/territory name and abbreviation
     for region, ab in zip(study_area, abbr): # a shapefile of each inputted province/territory is created
-        arcpy.Select_analysis(census_tracts, r"C:\GEOM67\GroupProject\bound{}.shp".format(ab),
+        arcpy.Select_analysis(census_tracts, "output\bound{}.shp".format(ab),
         "PRNAME = '{}'".format(region)) # each output will have its province/territory abbrevation at the end  
         
 
 
     # each previous clipped province/territory is then used to clip the fire points
     for ab in abbr:
-        arcpy.Clip_analysis(points, r"C:\GEOM67\GroupProject\bound{}.shp".format(ab),
-        r"C:\GEOM67\GroupProject\clipped_points_{}.shp".format(ab))
+        arcpy.Clip_analysis(points, "output\bound{}.shp".format(ab),
+        "output\clipped_points_{}.shp".format(ab))
     # each output will have its province/territory abbrevation at the end
 
 
@@ -89,23 +93,23 @@ try:
     # Clumped cluster
     # For loop iterates for each inputted province's/territory's clipped fire points
     for ab in abbr:
-        arcpy.stats.DensityBasedClustering(r"C:\GEOM67\GroupProject\clipped_points_{}.shp".format(ab), 
-        r"C:\GEOM67\GroupProject\Clumped_Cluster_{}.shp".format(ab), 
+        arcpy.stats.DensityBasedClustering("output\clipped_points_{}.shp".format(ab), 
+        "output\Clumped_Cluster_{}.shp".format(ab), 
         "OPTICS", minFeatures1, srcDistance1, "") 
 
     # Dispersed cluster
     # For loop iterates for each input province/territory clipped fire points
 
     for ab in abbr: 
-        arcpy.Select_analysis(r'C:\GEOM67\GroupProject\Clumped_Cluster_{}.shp'.format(ab),r'C:\GEOM67\GroupProject\Dispersed_Input_{}.shp'.format(ab),'"CLUSTER_ID" = -1')
+        arcpy.Select_analysis("output\Clumped_Cluster_{}.shp".format(ab),"output\Dispersed_Input_{}.shp".format(ab), '"CLUSTER_ID" = -1')
 
     for ab in abbr:
-        arcpy.stats.DensityBasedClustering(r"C:\GEOM67\GroupProject\Dispersed_Input_{}.shp".format(ab), 
-        r"C:\GEOM67\GroupProject\Dispersed_Cluster_{}.shp".format(ab),
+        arcpy.stats.DensityBasedClustering("output\Dispersed_Input_{}.shp".format(ab), 
+        "output\Dispersed_Cluster_{}.shp".format(ab),
         "OPTICS", minFeatures2, srcDistance2, "")
 
     for ab in abbr: 
-        arcpy.Select_analysis(r'C:\GEOM67\GroupProject\Dispersed_Cluster_{}.shp'.format(ab),r'C:\GEOM67\GroupProject\Random_Points{}.shp'.format(ab),'"CLUSTER_ID" = -1')
+        arcpy.Select_analysis("output\Dispersed_Cluster_{}.shp".format(ab),"output\Random_Points{}.shp".format(ab),'"CLUSTER_ID" = -1')
 
 
 except:
