@@ -1,7 +1,8 @@
-import arcpy, csv, os, sys
+import arcpy, csv
 
 try: 
-    arcpy.env.overwriteOutput = True #should this be false?
+    # To allow overwriting the outputs change the overwrite option to true.
+    arcpy.env.overwriteOutput = True
 
     firePointsTable = "modis_2019_Canada.csv"
 
