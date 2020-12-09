@@ -8,7 +8,7 @@ try:
     # outGDB = "results.gdb"
 
     # Create's the file geodatabase
-    arcpy.CreateFileGDB_management(outWorkspace, outGDB)
+    # arcpy.CreateFileGDB_management(outWorkspace, outGDB)
 
     firePointsTable = "modis_2019_Canada.csv"
 
