@@ -107,29 +107,6 @@ try:
     for ab in abbr: 
         arcpy.Select_analysis(r'C:\GEOM67\GroupProject\Dispersed_Cluster_{}.shp'.format(ab),r'C:\GEOM67\GroupProject\Random_Points{}.shp'.format(ab),'"CLUSTER_ID" = -1')
 
-    tableList = arcpy.ListTables
-    for dbaseTable in tableList(): # check if there is a way to only select certain tables - don't need inputs, just outputs
-        if "Random_points" in tableList():
-            outTable = os.path.join(outWorkspace, os.path.splitext(dbaseTable)[0])
-            arcpy.CopyRows_management(dbaseTable, outTable.csv)
-        else: 
-            print("Table could not be found.")
-
-    # try excepts: arcgisscripting.ExecuteError: ERROR 110141: The Minimum Number of Features per Cluster is greater than the number of features in the dataset.Failed to execute (DensityBasedClustering).
-    
-    # these files can then be read back in and counted for the results ie. 
-
-    total_random_points = []
-    total_clumped_clusters = []
-    total_dispersed_clusters = []
-
-    with open(file_path + "random_point_rows.csv","r") as csv_file: # wasn't recognizing file in same folder, had to add file path
-        csv_reader = csv.reader(csv_file, delimiter=',') 
-    for lines in csv_reader: 
-        total_random_points.append(lines[2]) # third field in table, should be list index 2? 
-
-    print(len(total_random_points))
-
 
 except:
     print("An Error has occurred")
