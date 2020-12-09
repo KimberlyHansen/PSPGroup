@@ -16,7 +16,6 @@ points = r"C:\GEOM67\GroupProject\firePoints.shp"
 # Canada census tract province and territory boundary shapefile 
 census_tracts = r"C:\GEOM67\GroupProject\lpr_000b16a_e\lpr_000b16a_e.shp"
 
-
 # Below is a dictionary holding province name values.
 # The first value of each key represents the values as exactly written in the PRNAME field in the 
 # census tracts file. The second value of each key is the abbrevation of those names which will 
@@ -57,8 +56,6 @@ for region, ab in zip(study_area, abbr): # a shapefile of each inputted province
     arcpy.Select_analysis(census_tracts, r"C:\GEOM67\GroupProject\bound{}.shp".format(ab),
     "PRNAME = '{}'".format(region)) # each output will have its province/territory abbrevation at the end  
      
-
-
 # each previous clipped province/territory is then used to clip the fire points
 for ab in abbr:
     arcpy.Clip_analysis(points, r"C:\GEOM67\GroupProject\bound{}.shp".format(ab),

@@ -96,7 +96,11 @@ try:
     print("************************************************************************")
     print("A shapefile with all your clustered data will be downloaded: ")
     print()
-
+        # User has option to use the program again
+        end = input("Do you want to stop entering values (Y/N)? ")
+        print()
+        if end.upper() == 'N' :
+            break
 
 except arcpy.ExecuteError:
     print(arcpy.GetMessages(2))  
