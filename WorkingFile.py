@@ -113,8 +113,7 @@ try:
         arcpy.Select_analysis("output\Dispersed_Cluster_{}.shp".format(ab),"output\Random_Points{}.shp".format(ab),'"CLUSTER_ID" = -1')
 
 
-except:
-    print("An Error has occurred")
+
 
 except arcpy.ExecuteError:
     print(arcpy.GetMessages(2))  
@@ -123,5 +122,5 @@ except Exception:
     e = sys.exc_info()[1]
     print(e.args[0])
     arcpy.AddError(e.args[0])
-finally:
-    print ("Something")
+except:
+    print("An Error has occurred")
